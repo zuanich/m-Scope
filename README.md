@@ -16,13 +16,5 @@ C:\Users\zuani\AppData\Local\Arduino15\packages\arduino\hardware\mbed_rp2040\3.4
 Display Pin Setup:
 \TFT_eSPI\User_Setups\Setup61_RP2040_GC9A01.h
  
+:caption: Related Products
 Written by August Zuanich IIII.
-
-.. toctree::
-    :caption: Related Products
-
-    Adafruit Feather M4 Express - Featuring ATSAMD51 - ATSAMD51 Cortex M4<https://www.adafruit.com/product/3857>
-    Adafruit TFT FeatherWing - 3.5" 480x320 Touchscreen for Feathers <https://www.adafruit.com/product/3651>
-    TFT FeatherWing - 2.4" 320x240 Touchscreen For All Feathers <https://www.adafruit.com/product/3315>
-    Adafruit Mini Color TFT with Joystick FeatherWing <https://www.adafruit.com/product/3321>
-

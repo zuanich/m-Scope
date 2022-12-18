@@ -12,3 +12,7 @@ Display Pin Setup:
 \TFT_eSPI\User_Setups\Setup61_RP2040_GC9A01.h
  
 Written by August Zuanich IIII.
+
+|Name|Email|Address|
+|----|-----|-------|
+|John|john@example.com|Address1|

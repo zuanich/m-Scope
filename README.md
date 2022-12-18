@@ -1,7 +1,7 @@
 # M-Scope
 
-This is a sketch is a replacement Oscilloscope for a Marantz Model 19
-It uses a 1.28" 240x240 Round LCD connected to Raspberry Pico. Goto the collowing URL for a connection diagram:
+## This is a sketch is a replacement Oscilloscope for a Marantz Model 19
+## It uses a 1.28" 240x240 Round LCD connected to Raspberry Pico. Goto the collowing URL for a connection diagram:
 
 https://www.pcbway.com/project/shareproject/Raspberry_Pi_Pico_with_GC9A01_Round_Display_using_Arduino_IDE_and_TFT_eSPI_Library.html
 https://www.pcbway.com/project/shareproject/Finally_Animated_Eyes_using_Seed_Xiao_RP2040_d7af7894.html Animated Eyes.

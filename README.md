@@ -16,5 +16,4 @@ C:\Users\zuani\AppData\Local\Arduino15\packages\arduino\hardware\mbed_rp2040\3.4
 Display Pin Setup:
 \TFT_eSPI\User_Setups\Setup61_RP2040_GC9A01.h
  
-:caption: Related Products
 Written by August Zuanich IIII.

@@ -5,8 +5,6 @@ It uses a 1.28" 240x240 Round LCD connected to Raspberry Pico. Here is a [connec
 
 Here is a [spec sheet](https://rlx.sk/en/lcd-tft-oled-e-paper/8035-240240-general-128inch-round-lcd-display-module-65k-rgb-ws-19192.html "spec sheet") on the Round Display.
 
-[spec sheet] (https://rlx.sk/en/lcd-tft-oled-e-paper/8035-240240-general-128inch-round-lcd-display-module-65k-rgb-ws-19192.html "spec sheet")
-
 Pin setup for PICO:
 C:\Users\zuani\AppData\Local\Arduino15\packages\arduino\hardware\mbed_rp2040\3.4.1\variants\RASPBERRY_PI_PICO\pins_arduino.h
 

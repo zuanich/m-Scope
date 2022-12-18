@@ -11,4 +11,4 @@ C:\Users\zuani\AppData\Local\Arduino15\packages\arduino\hardware\mbed_rp2040\3.4
 Display Pin Setup:
 \TFT_eSPI\User_Setups\Setup61_RP2040_GC9A01.h
  
-Written by August Zuanich IIII using [formatting](https://www.bing.com/search?q=Readme.md+formatting&form=ANNTH1&refig=f8731d82621b4b8896ba58d0060091c0&ntref=1 "formatting tips") tips.
+Written by August Zuanich IIII using [formatting](https://medium.com/@saumya.ranjan/how-to-write-a-readme-md-file-markdown-file-20cb7cbcd6f "formatting") tips.

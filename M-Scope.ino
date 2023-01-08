@@ -82,6 +82,8 @@ int numSamples = 0;
 int sdChipSelect = 15;
 boolean sdCardValid = true;
 
+boolean buttonNotChecked = true;
+
 /*
  ___  ___  _____  _   _  ___ 
 / __|| __||_   _|| | | || _ \
@@ -147,6 +149,25 @@ void setup() {
 */                  
 void loop()
 {
+    while(!digitalRead(BUTTONPIN))
+    {
+      if (buttonNotChecked)
+      {
+        if (scaleToFit)
+        {
+          scaleToFit = false;
+          buttonNotChecked = false;
+        }
+        else
+        {
+          scaleToFit = true;
+          buttonNotChecked = false;
+        }
+      }
+    }
+
+    buttonNotChecked = true;
+
     if (sdCardValid)
     {
       myFile.read(hDataValue,2);

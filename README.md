@@ -11,7 +11,7 @@ The following is a spec sheet on the Round Display:
 https://rlx.sk/en/lcd-tft-oled-e-paper/8035-240240-general-128inch-round-lcd-display-module-65k-rgb-ws-19192.html
 
 Pin setup for PICO:
-C:\Users\zuani\AppData\Local\Arduino15\packages\arduino\hardware\mbed_rp2040\3.4.1\variants\RASPBERRY_PI_PICO\pins_arduino.h
+C:\Users\zuani\AppData\Local\Arduino15\packages\arduino\hardware\mbed_rp2040\3.5.1\variants\RASPBERRY_PI_PICO\pins_arduino.h
 
 Display Pin Setup:
 \TFT_eSPI\User_Setups\Setup61_RP2040_GC9A01.h

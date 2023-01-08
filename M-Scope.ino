@@ -1,12 +1,40 @@
 /*
+ ┏━┓┏━┓━━━━━┏━━━┓┏━━━┓┏━━━┓┏━━━┓┏━━━┓
+ ┃┃┗┛┃┃━━━━━┃┏━┓┃┃┏━┓┃┃┏━┓┃┃┏━┓┃┃┏━━┛
+ ┃┏┓┏┓┃━━━━━┃┗━━┓┃┃━┗┛┃┃━┃┃┃┗━┛┃┃┗━━┓
+ ┃┃┃┃┃┃┏━━━┓┗━━┓┃┃┃━┏┓┃┃━┃┃┃┏━━┛┃┏━━┛
+ ┃┃┃┃┃┃┗━━━┛┃┗━┛┃┃┗━┛┃┃┗━┛┃┃┃━━━┃┗━━┓
+ ┗┛┗┛┗┛━━━━━┗━━━┛┗━━━┛┗━━━┛┗┛━━━┗━━━┛
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * This is a sketch is a replacement Ocillio Scope for a Marantz Model 19
  * It uses a round 240 x 240 LCD
  * 
  * Written by August Zuanich IIII.
+
+   Notes:
+   Brown wire Pin K on Scope circut board is Horizontal
+   White wire Pin E on Scope circut board is Vertical
+
+   Voltaged for Max and Min on Scope Display
+   Horizontal: 151.4v Max 56.3v Min
+   Vertical: 148.7v Max 49.1 Min
+
+   ****Origional Scope Factors****
+   read D to A and scale for display
+   D to A Range 0 to 1023
+   CRT Scale: X: 758-294 Range:464
+   CRT Scale: Y: 715-264 Range:451
+
  */
 
 #include <TFT_eSPI.h>
 TFT_eSPI tft = TFT_eSPI();
+
+#include <SPI.h>
+#include <SD.h>
+
+#define BUTTONPIN 20
 
 // color definitions
 const int  Display_Color_Black        = 0x0000;
@@ -21,7 +49,7 @@ const int  Display_Color_White        = 0xFFFF;
 const int persistence = 1000; // Tested 100 for M-Scope, still need more testing.
 
 const float pi = 3.141592654;
-const float piIncrement = 10;
+const float piIncrement = 100;
 
 // The colors we actually want to use
 int Display_LineDot_Color      = Display_Color_Green;
@@ -44,11 +72,29 @@ int minX = 32767;
 int minY = 32767;
 int maxX = -32768;
 int maxY = -32768;
+boolean scaleToFit = false;
 
+String sampFileName = "SLOWSAMP.BIN";
+File myFile;
+byte hDataValue[2];
+byte vDataValue[2];
+int numSamples = 0;
+int sdChipSelect = 15;
+boolean sdCardValid = true;
 
+/*
+ ___  ___  _____  _   _  ___ 
+/ __|| __||_   _|| | | || _ \
+\__ \| _|   | |  | |_| ||  _/
+|___/|___|  |_|   \___/ |_|    
+*/
 void setup() {
 
     Serial.begin(115200);
+     while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB
+    }
+    Serial.println("Serial port is setup");
 
     tft.begin();
     tft.setRotation(2);
@@ -58,42 +104,92 @@ void setup() {
     digitalWrite(23,HIGH);
 
     xd[1] = -1;
-}
 
+    Serial.print("Initializing SD card...");
+    // see if the card is present and can be initialized:
+    if (!SD.begin(sdChipSelect)) {
+      Serial.println("card failed, or not present");
+      sdCardValid = false;
+    }
+
+    if (sdCardValid)
+    {
+      Serial.println("card initialized.");
+
+      myFile = SD.open(sampFileName, FILE_READ);
+      if (myFile)
+      {
+         numSamples = myFile.size();
+
+         Serial.print("Opened SD card sample file ");
+         Serial.println(sampFileName);
+         Serial.print("Number of samples in sample file:");
+         Serial.print(numSamples / 8);
+         Serial.print(" (");
+         Serial.print(numSamples);
+         Serial.println(" bytes)");
+      }
+      else
+      {
+         Serial.print("Failed to open SD card sample file ");
+         Serial.println(sampFileName);
+         sdCardValid = false;
+      }
+    }
+
+    pinMode(BUTTONPIN, INPUT);
+}
+/*
+ _      ___    ___   ___ 
+| |    / _ \  / _ \ | _ \
+| |__ | (_) || (_) ||  _/
+|____| \___/  \___/ |_|   
+*/                  
 void loop()
 {
-    an0 = analogRead(xSensorPin);
-    an1 = analogRead(ySensorPin);
+    if (sdCardValid)
+    {
+      myFile.read(hDataValue,2);
+      myFile.read(vDataValue,2);
+      if (myFile.available() == 0) myFile.seek(0);
 
-    //****Scale fit all on display****
-    x = an0 / 4.2625;
-    y = an1 / 4.2625;
-    
-    //****Origional Scope Factors****
-    //read D to A and scale for display
-    //D to A Range 0 to 1023
-    //CRT Scale: X: 758-294 Range:464
-    //CRT Scale: Y: 715-264 Range:451
-    //
-//    x = (an0-294) * 0.5172413793103448;
-//    y = (an1-264) * 0.5321507760532151;
+      an0 = hDataValue[0] + (hDataValue[1] * 256);
+      an1 = vDataValue[0] + (vDataValue[1] * 256);
+    }
+    else
+    {    
+      an0 = analogRead(xSensorPin);
+      an1 = analogRead(ySensorPin);
+    }
+
+    if (scaleToFit)
+    {
+      //****Scale fit all on display****
+      x = an0 / 4.2625;
+      y = an1 / 4.2625;
+    }
+    else
+    {
+      x = (an0-294) * 0.5172413793103448;
+      y = (an1-264) * 0.5321507760532151;
+    }
 
     //****Used for calibration****
-    if (an0 > maxX){
-      maxX = an0;
-    }
+    // if (an0 > maxX){
+    //   maxX = an0;
+    // }
 
-    if (an0 < minX){
-      minX = an0;
-    }
+    // if (an0 < minX){
+    //   minX = an0;
+    // }
 
-    if (an1 > maxY){
-      maxY = an1;
-    }
+    // if (an1 > maxY){
+    //   maxY = an1;
+    // }
 
-    if (an1 < minY){
-      minY = an1;
-    }
+    // if (an1 < minY){
+    //   minY = an1;
+    // }
 
     //****used to generate a circle for testing****
 //    x = int((sin(piCount)+1) * 80) + 40;
@@ -118,20 +214,20 @@ void loop()
 /// --------------------------
 /// Custom ISR Timer Routine
 /// --------------------------
-void timerIsr()
-{
-      //
-      // Print out max an values collected from calibration routine
-      //
-      Serial.print("Max X:");
-      Serial.println(maxX);
+// void timerIsr()
+// {
+//       //
+//       // Print out max an values collected from calibration routine
+//       //
+//       Serial.print("Max X:");
+//       Serial.println(maxX);
 
-      Serial.print("Min X:");
-      Serial.println(minX);
+//       Serial.print("Min X:");
+//       Serial.println(minX);
 
-      Serial.print("Max Y:");
-      Serial.println(maxY);
+//       Serial.print("Max Y:");
+//       Serial.println(maxY);
 
-      Serial.print("Min Y:");
-      Serial.println(minY);
-}
+//       Serial.print("Min Y:");
+//       Serial.println(minY);
+// }

@@ -46,10 +46,7 @@ const int  Display_Color_Magenta      = 0xF81F;
 const int  Display_Color_Yellow       = 0xFFE0;
 const int  Display_Color_White        = 0xFFFF;
 
-const int persistence = 1000; // Tested 100 for M-Scope, still need more testing.
-
-const float pi = 3.141592654;
-const float piIncrement = 100;
+const int persistence = 100; // Tested 100 for M-Scope, still need more testing.
 
 // The colors we actually want to use
 int Display_LineDot_Color      = Display_Color_Green;
@@ -67,14 +64,14 @@ int i=1;
 int j=0;
 int i2=2;
 int j2=1;
-float piCount = pi;
 int minX = 32767;
 int minY = 32767;
 int maxX = -32768;
 int maxY = -32768;
 boolean scaleToFit = false;
 
-String sampFileName = "SLOWSAMP.BIN";
+String sampFileName = "SAMPLES.BIN";
+String recFileName = "SAMPREC.BIN";
 File myFile;
 byte hDataValue[2];
 byte vDataValue[2];
@@ -137,6 +134,8 @@ void setup() {
          Serial.println(sampFileName);
          sdCardValid = false;
       }
+      recFile = SD.open(sampFileName, FILE_WRITE);
+
     }
 
     pinMode(BUTTONPIN, INPUT);
@@ -194,28 +193,6 @@ void loop()
       x = (an0-294) * 0.5172413793103448;
       y = (an1-264) * 0.5321507760532151;
     }
-
-    //****Used for calibration****
-    // if (an0 > maxX){
-    //   maxX = an0;
-    // }
-
-    // if (an0 < minX){
-    //   minX = an0;
-    // }
-
-    // if (an1 > maxY){
-    //   maxY = an1;
-    // }
-
-    // if (an1 < minY){
-    //   minY = an1;
-    // }
-
-    //****used to generate a circle for testing****
-//    x = int((sin(piCount)+1) * 80) + 40;
-//    y = int((cos(piCount)+1) * 80) + 40;
-//    piCount += (pi/piIncrement);
     
     if (xd[1] != -1) tft.drawLine(x,y,xd[j],yd[j],Display_LineDot_Color);
     tft.drawLine(xd[i2],yd[i2],xd[j2],yd[j2],Display_Background_Color);
@@ -231,24 +208,3 @@ void loop()
     i2++;
     j2++;
 }
-
-/// --------------------------
-/// Custom ISR Timer Routine
-/// --------------------------
-// void timerIsr()
-// {
-//       //
-//       // Print out max an values collected from calibration routine
-//       //
-//       Serial.print("Max X:");
-//       Serial.println(maxX);
-
-//       Serial.print("Min X:");
-//       Serial.println(minX);
-
-//       Serial.print("Max Y:");
-//       Serial.println(maxY);
-
-//       Serial.print("Min Y:");
-//       Serial.println(minY);
-// }
